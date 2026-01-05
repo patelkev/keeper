@@ -2,6 +2,10 @@
 
 A modern, interactive note-taking application built with React and Material-UI. Keeper provides a clean and intuitive interface for quickly creating, viewing, and managing your notes.
 
+## 🌐 Live Demo
+
+**Try it out:** [https://keeper-app-v1.vercel.app/](https://keeper-app-v1.vercel.app/)
+
 ## 🎯 Problem Solved
 
 In today's fast-paced digital world, people need a quick and efficient way to capture thoughts, ideas, and reminders without the complexity of heavy note-taking applications. Keeper solves this by providing:
