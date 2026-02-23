@@ -2,6 +2,24 @@
 const API_URL = import.meta.env.VITE_API_URL
   || (import.meta.env.PROD ? '' : 'http://localhost:5001') + '/api';
 
+// Parse JSON or throw a clear error when server returns HTML (e.g. 404 page)
+async function parseJsonResponse(response) {
+  const text = await response.text();
+  const contentType = response.headers.get('content-type') || '';
+  if (!contentType.includes('application/json')) {
+    throw new Error(
+      response.status === 404
+        ? 'API not found. If deployed, ensure the API route and env vars are set.'
+        : `Server returned ${response.status} (expected JSON). Check network tab.`
+    );
+  }
+  try {
+    return text ? JSON.parse(text) : {};
+  } catch {
+    throw new Error('Invalid JSON from server');
+  }
+}
+
 // Helper function to get auth token from localStorage
 const getToken = () => {
   return localStorage.getItem('token');
@@ -28,7 +46,7 @@ export const api = {
       body: JSON.stringify(userData),
     });
 
-    const data = await response.json();
+    const data = await parseJsonResponse(response);
     if (!response.ok) {
       throw new Error(data.message || 'Registration failed');
     }
@@ -44,7 +62,7 @@ export const api = {
       body: JSON.stringify(credentials),
     });
 
-    const data = await response.json();
+    const data = await parseJsonResponse(response);
     if (!response.ok) {
       throw new Error(data.message || 'Login failed');
     }
@@ -58,7 +76,7 @@ export const api = {
       headers: getAuthHeaders(),
     });
 
-    const data = await response.json();
+    const data = await parseJsonResponse(response);
     if (!response.ok) {
       if (response.status === 401) {
         throw new Error('Unauthorized - Please login again');
@@ -75,7 +93,7 @@ export const api = {
       body: JSON.stringify(noteData),
     });
 
-    const data = await response.json();
+    const data = await parseJsonResponse(response);
     if (!response.ok) {
       if (response.status === 401) {
         throw new Error('Unauthorized - Please login again');
@@ -95,7 +113,7 @@ export const api = {
       if (response.status === 401) {
         throw new Error('Unauthorized - Please login again');
       }
-      const data = await response.json();
+      const data = await parseJsonResponse(response);
       throw new Error(data.message || 'Failed to delete note');
     }
     return { success: true };
@@ -108,7 +126,7 @@ export const api = {
       body: JSON.stringify(noteData),
     });
 
-    const data = await response.json();
+    const data = await parseJsonResponse(response);
     if (!response.ok) {
       if (response.status === 401) {
         throw new Error('Unauthorized - Please login again');
