@@ -101,3 +101,17 @@ form.create-note button {
   cursor: pointer;
   outline: none;
 }
+
+.notes-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 20px;
+  min-height: 400px;
+}
+
+.notes-container::after {
+  content: "";
+  display: table;
+  clear: both;
+}
