@@ -1,4 +1,6 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5001/api';
+// In production (e.g. Vercel), same-origin /api when VITE_API_URL is not set
+const API_URL = import.meta.env.VITE_API_URL
+  || (import.meta.env.PROD ? '' : 'http://localhost:5001') + '/api';
 
 // Helper function to get auth token from localStorage
 const getToken = () => {
